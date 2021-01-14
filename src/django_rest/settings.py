@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'fscohort',
     'fscohort_api',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
