@@ -124,3 +124,4 @@ def student_list_create_api(request):
 15. Remove the commented out imported functions in urls and import `student_list_create_api` + add the path
 16. Check if you see djangos fantasic page on `http://localhost:8000/api/list-create-api/`
 17. Check also from POSTMAN with the same url both with GET and POST. If you get "Unsupported media type" error with POST, go to Headers and add `Content-Type` under KEY column and `application/json` under VALUE column. Then try again.
+18. Up to here we were getting into the logic. There are other ways to get the same functional results : Class Based Views, Generic Views and Mixin Views. These can replace each other.
