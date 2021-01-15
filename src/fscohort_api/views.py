@@ -13,6 +13,8 @@ from rest_framework import status
 
 from rest_framework.views import APIView
 
+from rest_framework import generics
+
 
 def home_api(request):
     data = {
@@ -122,48 +124,63 @@ def home_api(request):
 
 # -------------------👇 CLASS BASED VIEWS-------------------
 
-class StudentList(APIView):
+# class StudentList(APIView):
 
-    def get(self, request):
-        students = Student.objects.all()
-        serializer = StudentSerializer(students, many=True)
-        return Response(serializer.data)
+#     def get(self, request):
+#         students = Student.objects.all()
+#         serializer = StudentSerializer(students, many=True)
+#         return Response(serializer.data)
 
-    def post(self, request):
-        serializer = StudentSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serialize.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#     def post(self, request):
+#         serializer = StudentSerializer(data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serialize.data, status=status.HTTP_201_CREATED)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class StudentGetUpdateDelete(APIView):
+# class StudentGetUpdateDelete(APIView):
 
-    def get_object(self, id):
-        try:
-            return Student.objects.get(id=id)
-        except Student.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+#     def get_object(self, id):
+#         try:
+#             return Student.objects.get(id=id)
+#         except Student.DoesNotExist:
+#             return Response(status=status.HTTP_404_NOT_FOUND)
 
-    def get(self, request, id):
-        student = self.get_object(id)
-        # student = get_object_or_404(Student, id=id)
-        serializer = StudentSerializer(student)
-        return Response(serializer.data)
+#     def get(self, request, id):
+#         student = self.get_object(id)
+#         # student = get_object_or_404(Student, id=id)
+#         serializer = StudentSerializer(student)
+#         return Response(serializer.data)
 
-    def put(self, request, id):
-        student = self.get_object(id)
-        serializer = StudentSerializer(student, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            data = {
-                "message": "Student updatet"
-            }
-            return Response(data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#     def put(self, request, id):
+#         student = self.get_object(id)
+#         serializer = StudentSerializer(student, data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             data = {
+#                 "message": "Student updatet"
+#             }
+#             return Response(data)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, id):
-        student = self.get_object(id)
-        student.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+#     def delete(self, request, id):
+#         student = self.get_object(id)
+#         student.delete()
+#         return Response(status=status.HTTP_204_NO_CONTENT)
 # -------------------👆 CLASS BASED VIEWS -------------------
+
+# -------------------👇 GENERIC VIEWS------------------------
+
+class StudentList(generics.ListCreateAPIView):
+    serializer_class = StudentSerializer
+    queryset = Student.objects.all()
+
+
+class StudentGetUpdateDelete(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = StudentSerializer
+    queryset = Student.objects.all()
+    lookup_field = "id"  # generic by default works with pk, he we overwrite it to id
+
+
+# -------------------👆 GENERIC VIEWS -----------------------
