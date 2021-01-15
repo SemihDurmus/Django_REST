@@ -15,6 +15,8 @@ from rest_framework.views import APIView
 
 from rest_framework import generics
 
+from rest_framework import mixins
+
 
 def home_api(request):
     data = {
@@ -184,3 +186,27 @@ class StudentGetUpdateDelete(generics.RetrieveUpdateDestroyAPIView):
 
 
 # -------------------👆 GENERIC VIEWS -----------------------
+
+# -------------------👇 MIXIN VIEWS--------------------------
+
+class Student(generics.GenericAPIView, mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.CreateModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin):
+    serializer_class = StudentSerializer
+    queryset = Student.objects.all()
+    lookup_field = "id"
+
+    def get(self, request, id):
+        if id:
+            return self.retrieve(request)
+        else:
+            return self.list(request)
+
+    def post(self, request):
+        return self.create(request)
+
+    def put(self, request, id):
+        return self.update(request)
+
+    def delete(self, request, id):
+        return self.destroy(request)
+
+# -------------------👆 MIXIN VIEWS ------------------------
